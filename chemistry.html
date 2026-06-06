@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChemLab Pro — Kimyo & Biologiya</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#000;
+  --bg1:#0a0a0a;
+  --bg2:#111;
+  --bg3:#1a1a1a;
+  --bg4:#222;
+  --glass:rgba(255,255,255,0.04);
+  --glass2:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.08);
+  --border2:rgba(255,255,255,0.15);
+  --text:#f5f5f7;
+  --text2:#a1a1a6;
+  --text3:#6e6e73;
+  --accent:#2dd4bf;
+  --accent2:#818cf8;
+  --gold:#f59e0b;
+  --green:#4ade80;
+  --pink:#f472b6;
+  --sky:#38bdf8;
+  --r:20px;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-weight:300;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+/* NOISE TEXTURE OVERLAY */
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9999;
+  opacity:0.4;
+}
+
+/* NAV */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 40px;
+  height:64px;
+  background:rgba(0,0,0,0.72);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:'DM Mono',monospace;
+  font-size:15px;
+  font-weight:500;
+  letter-spacing:-0.02em;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.nav-links{
+  display:flex;
+  gap:32px;
+  list-style:none;
+}
+.nav-links a{
+  font-size:14px;
+  color:var(--text2);
+  text-decoration:none;
+  transition:color .2s;
+  font-weight:400;
+}
+.nav-links a:hover{color:var(--text)}
+.nav-premium-btn{
+  background:linear-gradient(135deg,var(--gold),#ef4444);
+  border:none;
+  color:#000;
+  font-family:'DM Sans',sans-serif;
+  font-weight:600;
+  font-size:13px;
+  padding:8px 20px;
+  border-radius:100px;
+  cursor:pointer;
+  transition:opacity .2s,transform .15s;
+  letter-spacing:0.01em;
+}
+.nav-premium-btn:hover{opacity:0.85;transform:scale(1.02)}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:120px 24px 80px;
+  position:relative;
+  overflow:hidden;
+}
+/* Radial glow behind hero */
+.hero::before{
+  content:'';
+  position:absolute;
+  width:800px;height:800px;
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(45,212,191,0.08) 0%,transparent 70%);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--accent);
+  border:1px solid rgba(45,212,191,0.25);
+  border-radius:100px;
+  padding:6px 16px;
+  margin-bottom:32px;
+  animation:fadeUp .6s ease both;
+}
+.hero-eyebrow::before{
+  content:'';
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--accent);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+h1.hero-title{
+  font-size:clamp(48px,8vw,88px);
+  font-weight:200;
+  letter-spacing:-0.04em;
+  line-height:1.0;
+  margin-bottom:24px;
+  animation:fadeUp .6s .1s ease both;
+}
+h1.hero-title strong{
+  font-weight:600;
+  background:linear-gradient(135deg,#2dd4bf 0%,#818cf8 50%,#f472b6 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-sub{
+  font-size:18px;
+  color:var(--text2);
+  max-width:520px;
+  line-height:1.7;
+  margin-bottom:48px;
+  font-weight:300;
+  animation:fadeUp .6s .18s ease both;
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* SEARCH */
+.search-container{
+  width:100%;
+  max-width:640px;
+  animation:fadeUp .6s .24s ease both;
+  margin-bottom:24px;
+}
+.search-box{
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+.search-icon{
+  position:absolute;
+  left:22px;
+  color:var(--text3);
+  font-size:18px;
+  pointer-events:none;
+}
+.search-input{
+  width:100%;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border2);
+  border-radius:100px;
+  color:var(--text);
+  font-family:'DM Mono',monospace;
+  font-size:17px;
+  font-weight:400;
+  padding:20px 140px 20px 54px;
+  outline:none;
+  transition:all .3s;
+  letter-spacing:0.01em;
+  backdrop-filter:blur(12px);
+}
+.search-input::placeholder{
+  color:var(--text3);
+  font-family:'DM Mono',monospace;
+  font-size:15px;
+}
+.search-input:focus{
+  background:rgba(255,255,255,0.07);
+  border-color:rgba(45,212,191,0.5);
+  box-shadow:0 0 0 4px rgba(45,212,191,0.08),0 20px 60px rgba(0,0,0,0.4);
+}
+.search-submit{
+  position:absolute;
+  right:8px;
+  background:linear-gradient(135deg,var(--accent),#0891b2);
+  border:none;
+  color:#000;
+  font-family:'DM Sans',sans-serif;
+  font-weight:600;
+  font-size:13px;
+  letter-spacing:0.03em;
+  padding:12px 24px;
+  border-radius:100px;
+  cursor:pointer;
+  transition:opacity .2s,transform .15s;
+}
+.search-submit:hover{opacity:.85;transform:scale(1.02)}
+
+/* CHIPS */
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:center;
+  animation:fadeUp .6s .3s ease both;
+  margin-bottom:60px;
+}
+.chip{
+  font-family:'DM Mono',monospace;
+  font-size:12px;
+  color:var(--text3);
+  border:1px solid var(--border);
+  border-radius:100px;
+  padding:6px 16px;
+  cursor:pointer;
+  background:transparent;
+  transition:all .2s;
+  letter-spacing:0.02em;
+}
+.chip:hover{
+  color:var(--text);
+  border-color:var(--border2);
+  background:var(--glass2);
+}
+
+/* STATS ROW */
+.stats-row{
+  display:flex;
+  gap:48px;
+  justify-content:center;
+  animation:fadeUp .6s .36s ease both;
+}
+.stat{text-align:center}
+.stat-num{
+  font-size:28px;
+  font-weight:500;
+  background:linear-gradient(135deg,var(--text),var(--text2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.stat-label{font-size:12px;color:var(--text3);margin-top:2px;letter-spacing:0.04em}
+
+/* SECTION */
+section{padding:80px 0}
+.container{max-width:900px;margin:0 auto;padding:0 24px}
+
+/* SECTION HEADER */
+.section-eyebrow{
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:12px;
+}
+.section-title{
+  font-size:clamp(28px,4vw,42px);
+  font-weight:200;
+  letter-spacing:-0.03em;
+  line-height:1.1;
+  margin-bottom:16px;
+}
+.section-title strong{font-weight:600}
+
+/* RESULTS */
+#resultsSection{display:none}
+.results-grid{display:flex;flex-direction:column;gap:10px;margin-top:32px}
+.reaction-card{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:24px 28px;
+  cursor:pointer;
+  transition:all .25s cubic-bezier(.4,0,.2,1);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+.reaction-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(45,212,191,0.03),transparent);
+  opacity:0;
+  transition:opacity .25s;
+}
+.reaction-card:hover{
+  border-color:var(--border2);
+  background:var(--glass2);
+  transform:translateY(-2px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.3);
+}
+.reaction-card:hover::before{opacity:1}
+.card-left{flex:1}
+.eq-display{
+  font-family:'DM Mono',monospace;
+  font-size:16px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:2px;
+  margin-bottom:10px;
+  line-height:2;
+}
+.tok{
+  display:inline-block;
+  padding:3px 10px;
+  border-radius:8px;
+  font-size:14px;
+  font-weight:500;
+  letter-spacing:0.01em;
+  transition:filter .2s;
+}
+.op{color:var(--text3);padding:0 6px;font-size:15px}
+.arrow-op{color:var(--accent);padding:0 10px;font-size:16px}
+.card-meta{display:flex;align-items:center;gap:10px}
+.badge{
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  padding:3px 10px;
+  border-radius:100px;
+}
+.badge-redox    {background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.2)}
+.badge-synthesis{background:rgba(74,222,128,0.1);color:#4ade80;border:1px solid rgba(74,222,128,0.2)}
+.badge-acidbase {background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.2)}
+.badge-combustion{background:rgba(251,146,60,0.1);color:#fb923c;border:1px solid rgba(251,146,60,0.2)}
+.badge-decomp   {background:rgba(34,211,238,0.1);color:#22d3ee;border:1px solid rgba(34,211,238,0.2)}
+.badge-bio      {background:rgba(129,140,248,0.1);color:#818cf8;border:1px solid rgba(129,140,248,0.2)}
+.badge-premium  {background:rgba(245,158,11,0.12);color:var(--gold);border:1px solid rgba(245,158,11,0.25)}
+.card-name{font-size:13px;color:var(--text2)}
+.card-arrow{
+  color:var(--text3);
+  font-size:20px;
+  transition:all .2s;
+  flex-shrink:0;
+}
+.reaction-card:hover .card-arrow{color:var(--text);transform:translateX(4px)}
+
+/* FEATURED CARDS — bento style */
+.bento-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:auto auto;
+  gap:16px;
+  margin-top:40px;
+}
+.bento-card{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:28px;
+  transition:all .3s;
+  position:relative;
+  overflow:hidden;
+}
+.bento-card:hover{
+  border-color:var(--border2);
+  background:var(--glass2);
+  transform:translateY(-3px);
+  box-shadow:0 24px 48px rgba(0,0,0,0.4);
+}
+.bento-card.wide{grid-column:span 2}
+.bento-card.tall{grid-row:span 2}
+.bento-glow{
+  position:absolute;
+  width:200px;height:200px;
+  border-radius:50%;
+  opacity:0.12;
+  filter:blur(40px);
+  top:-40px;right:-40px;
+  pointer-events:none;
+}
+.bento-icon{
+  font-size:32px;
+  margin-bottom:16px;
+  display:block;
+}
+.bento-title{
+  font-size:18px;
+  font-weight:500;
+  letter-spacing:-0.02em;
+  margin-bottom:8px;
+}
+.bento-desc{font-size:13px;color:var(--text2);line-height:1.6}
+.bento-formula{
+  font-family:'DM Mono',monospace;
+  font-size:12px;
+  color:var(--accent);
+  margin-top:14px;
+  padding:8px 12px;
+  background:rgba(45,212,191,0.06);
+  border-radius:8px;
+  border:1px solid rgba(45,212,191,0.12);
+}
+
+/* BIO SECTION */
+.bio-cards{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+  margin-top:40px;
+}
+.bio-card{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:32px;
+  transition:all .3s;
+  position:relative;
+  overflow:hidden;
+}
+.bio-card:hover{
+  border-color:rgba(129,140,248,0.3);
+  transform:translateY(-3px);
+  box-shadow:0 24px 48px rgba(0,0,0,0.4);
+}
+.bio-card::before{
+  content:'';
+  position:absolute;
+  top:-60px;right:-60px;
+  width:160px;height:160px;
+  border-radius:50%;
+  background:rgba(129,140,248,0.06);
+  filter:blur(30px);
+}
+.bio-emoji{font-size:36px;margin-bottom:16px;display:block}
+.bio-title{font-size:17px;font-weight:500;letter-spacing:-0.02em;margin-bottom:8px}
+.bio-desc{font-size:13px;color:var(--text2);line-height:1.65}
+.bio-fact{
+  margin-top:16px;
+  padding:12px 14px;
+  background:rgba(129,140,248,0.06);
+  border:1px solid rgba(129,140,248,0.12);
+  border-radius:10px;
+  font-size:12px;
+  color:#a5b4fc;
+  line-height:1.5;
+}
+.bio-fact strong{color:#818cf8}
+
+/* PREMIUM SECTION */
+.premium-section{
+  padding:80px 0;
+  position:relative;
+}
+.premium-section::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at center,rgba(245,158,11,0.04) 0%,transparent 70%);
+}
+.premium-box{
+  background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(239,68,68,0.04));
+  border:1px solid rgba(245,158,11,0.2);
+  border-radius:32px;
+  padding:60px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.premium-box::before{
+  content:'';
+  position:absolute;
+  top:-100px;left:50%;
+  transform:translateX(-50%);
+  width:400px;height:200px;
+  background:radial-gradient(ellipse,rgba(245,158,11,0.12),transparent 70%);
+  pointer-events:none;
+}
+.premium-crown{font-size:48px;margin-bottom:20px;display:block}
+.premium-title{
+  font-size:clamp(28px,4vw,44px);
+  font-weight:200;
+  letter-spacing:-0.03em;
+  margin-bottom:12px;
+}
+.premium-title strong{
+  font-weight:600;
+  background:linear-gradient(135deg,var(--gold),#ef4444);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.premium-sub{font-size:16px;color:var(--text2);max-width:480px;margin:0 auto 40px;line-height:1.7}
+.plans-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:40px;
+}
+.plan-card{
+  background:rgba(0,0,0,0.4);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:28px 24px;
+  text-align:left;
+  transition:all .3s;
+  position:relative;
+}
+.plan-card.featured{
+  border-color:rgba(245,158,11,0.4);
+  background:rgba(245,158,11,0.05);
+}
+.plan-card.featured::before{
+  content:'Eng mashhur';
+  position:absolute;
+  top:-12px;left:50%;
+  transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--gold),#ef4444);
+  color:#000;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  padding:4px 14px;
+  border-radius:100px;
+  white-space:nowrap;
+}
+.plan-name{font-size:13px;color:var(--text2);margin-bottom:8px;font-weight:400;letter-spacing:0.04em;text-transform:uppercase}
+.plan-price{font-size:32px;font-weight:500;letter-spacing:-0.03em;margin-bottom:4px}
+.plan-price span{font-size:14px;font-weight:300;color:var(--text2)}
+.plan-period{font-size:12px;color:var(--text3);margin-bottom:20px}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:10px}
+.plan-features li{
+  font-size:13px;
+  color:var(--text2);
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  line-height:1.4;
+}
+.plan-features li::before{
+  content:'✓';
+  color:var(--green);
+  font-weight:600;
+  flex-shrink:0;
+  margin-top:1px;
+}
+.plan-features li.locked{color:var(--text3)}
+.plan-features li.locked::before{content:'○';color:var(--text3)}
+.plan-btn{
+  width:100%;
+  margin-top:24px;
+  padding:13px;
+  border-radius:12px;
+  font-family:'DM Sans',sans-serif;
+  font-weight:500;
+  font-size:14px;
+  cursor:pointer;
+  transition:all .2s;
+  border:1px solid var(--border2);
+  background:transparent;
+  color:var(--text);
+}
+.plan-btn:hover{background:var(--glass2)}
+.plan-btn.featured-btn{
+  background:linear-gradient(135deg,var(--gold),#ef4444);
+  border:none;
+  color:#000;
+  font-weight:600;
+}
+.plan-btn.featured-btn:hover{opacity:.85;transform:scale(1.01)}
+
+/* MODAL */
+.modal-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  z-index:200;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:#141414;
+  border:1px solid var(--border2);
+  border-radius:28px;
+  max-width:600px;
+  width:100%;
+  padding:40px;
+  position:relative;
+  animation:modalIn .25s cubic-bezier(.34,1.2,.64,1) both;
+  max-height:85vh;
+  overflow-y:auto;
+}
+@keyframes modalIn{
+  from{opacity:0;transform:scale(.94) translateY(12px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+.modal::-webkit-scrollbar{width:4px}
+.modal::-webkit-scrollbar-track{background:transparent}
+.modal::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.modal-close{
+  position:absolute;
+  top:16px;right:16px;
+  background:var(--bg3);
+  border:none;
+  color:var(--text2);
+  width:34px;height:34px;
+  border-radius:50%;
+  font-size:16px;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.modal-close:hover{background:var(--bg4);color:var(--text)}
+.modal-tag{
+  display:inline-block;
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--accent);
+  border:1px solid rgba(45,212,191,0.2);
+  padding:4px 12px;
+  border-radius:100px;
+  margin-bottom:16px;
+}
+.modal h2{
+  font-size:22px;
+  font-weight:400;
+  letter-spacing:-0.02em;
+  margin-bottom:20px;
+}
+.modal-eq{
+  font-family:'DM Mono',monospace;
+  font-size:18px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:2px;
+  padding:20px;
+  background:var(--bg2);
+  border-radius:16px;
+  border:1px solid var(--border);
+  margin-bottom:24px;
+  line-height:2;
+}
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:20px;
+}
+.info-cell{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px 16px;
+}
+.info-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;font-family:'DM Mono',monospace}
+.info-val{font-size:14px;color:var(--text);line-height:1.4}
+.modal-desc{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px}
+.modal-application{
+  padding:16px;
+  background:rgba(45,212,191,0.05);
+  border:1px solid rgba(45,212,191,0.12);
+  border-radius:12px;
+  font-size:13px;
+  color:#5eead4;
+  line-height:1.6;
+  margin-bottom:12px;
+}
+.modal-warning{
+  padding:14px 16px;
+  background:rgba(248,113,113,0.06);
+  border:1px solid rgba(248,113,113,0.15);
+  border-radius:12px;
+  font-size:13px;
+  color:#fca5a5;
+  line-height:1.6;
+}
+
+/* PREMIUM LOCK */
+.lock-overlay{
+  position:relative;
+}
+.lock-blur{
+  filter:blur(6px);
+  pointer-events:none;
+  user-select:none;
+}
+.lock-badge{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+.lock-icon{font-size:28px}
+.lock-text{font-size:14px;color:var(--gold);font-weight:500}
+.lock-btn{
+  background:linear-gradient(135deg,var(--gold),#ef4444);
+  border:none;
+  color:#000;
+  font-family:'DM Sans',sans-serif;
+  font-weight:600;
+  font-size:13px;
+  padding:10px 22px;
+  border-radius:100px;
+  cursor:pointer;
+  transition:opacity .2s;
+}
+.lock-btn:hover{opacity:.85}
+
+/* FOOTER */
+footer{
+  border-top:1px solid var(--border);
+  padding:40px 24px;
+  text-align:center;
+  color:var(--text3);
+  font-size:12px;
+  font-family:'DM Mono',monospace;
+  letter-spacing:0.04em;
+}
+
+/* EMPTY */
+.empty{
+  text-align:center;
+  padding:60px 20px;
+  color:var(--text3);
+}
+.empty-em{font-size:40px;margin-bottom:12px;opacity:.4}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">⬡ ChemLab Pro</div>
+  <ul class="nav-links">
+    <li><a href="#chemistry">Kimyo</a></li>
+    <li><a href="#biology">Biologiya</a></li>
+    <li><a href="#premium">Premium</a></li>
+  </ul>
+  <button class="nav-premium-btn" onclick="scrollToPremium()">✦ Premium</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Kimyo · Biologiya · Tibbiyot</div>
+  <h1 class="hero-title">Fan — bu<br><strong>san'at.</strong></h1>
+  <p class="hero-sub">Kimyoviy reaksiyalar va biologik jarayonlarni go'zal, sodda va tushunarli tarzda o'rganing.</p>
+
+  <div class="search-container">
+    <div class="search-box">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" id="searchInput" type="text"
+             placeholder="Na+H2O= yoki ATP sintezi..." autocomplete="off" spellcheck="false"/>
+      <button class="search-submit" onclick="doSearch()">Qidir</button>
+    </div>
+  </div>
+
+  <div class="chips">
+    <span style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;align-self:center">Tez qidirish:</span>
+    <button class="chip" onclick="setSearch('Na+H2O=')">Na+H2O=</button>
+    <button class="chip" onclick="setSearch('H2+O2=')">H2+O2=</button>
+    <button class="chip" onclick="setSearch('NaOH+HCl=')">NaOH+HCl=</button>
+    <button class="chip" onclick="setSearch('ATP sintezi')">ATP sintezi</button>
+    <button class="chip" onclick="setSearch('DNK replikatsiyasi')">DNK replikatsiyasi</button>
+    <button class="chip" onclick="setSearch('Ca+O2=')">Ca+O2=</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num">120+</div><div class="stat-label">Reaksiyalar</div></div>
+    <div class="stat"><div class="stat-num">40+</div><div class="stat-label">Biologik jarayonlar</div></div>
+    <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Bepul kirish</div></div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="resultsSection">
+  <div class="container">
+    <div class="section-eyebrow" id="resultsLabel">Natijalar</div>
+    <div class="results-grid" id="resultsGrid"></div>
+  </div>
+</section>
+
+<!-- FEATURED CHEMISTRY -->
+<section id="chemistry">
+  <div class="container">
+    <div class="section-eyebrow">Kimyoviy Reaksiyalar</div>
+    <div class="section-title">Eng <strong>muhim</strong> reaksiyalar</div>
+    <div class="bento-grid">
+
+      <div class="bento-card wide" style="cursor:pointer" onclick="openReaction('na-h2o')">
+        <div class="bento-glow" style="background:var(--green)"></div>
+        <span class="bento-icon">⚗️</span>
+        <div class="bento-title">Natriy + Suv</div>
+        <div class="bento-desc">Metall suv bilan shiddatli reaksiya. Vodorod gazi ajraladi, NaOH hosil bo'ladi — kimyoning eng dramatik ko'rinishlaridan biri.</div>
+        <div class="bento-formula">2Na + 2H₂O → 2NaOH + H₂↑</div>
+      </div>
+
+      <div class="bento-card" style="cursor:pointer" onclick="openReaction('h2-o2')">
+        <div class="bento-glow" style="background:var(--sky)"></div>
+        <span class="bento-icon">💧</span>
+        <div class="bento-title">Suv hosil bo'lishi</div>
+        <div class="bento-desc">Vodorod yonib suv hosil qiladi. Raketa yoqilg'isi.</div>
+        <div class="bento-formula">2H₂ + O₂ → 2H₂O</div>
+      </div>
+
+      <div class="bento-card" style="cursor:pointer" onclick="openReaction('naoh-hcl')">
+        <div class="bento-glow" style="background:var(--gold)"></div>
+        <span class="bento-icon">🧂</span>
+        <div class="bento-title">Neytrallanish</div>
+        <div class="bento-desc">Kislota + Ishqor → Tuz + Suv. Klassik reaksiya.</div>
+        <div class="bento-formula">NaOH + HCl → NaCl + H₂O</div>
+      </div>
+
+      <div class="bento-card" style="cursor:pointer" onclick="openReaction('kmno4')">
+        <div class="bento-glow" style="background:var(--accent2)"></div>
+        <span class="bento-icon">🔮</span>
+        <div class="bento-title">KMnO₄ parchalanishi</div>
+        <div class="bento-desc">Binafsha kristall qizdirilganda O₂ gazi ajratadi — laboratoriyada kislorod olish usuli.</div>
+        <div class="bento-formula">2KMnO₄ → K₂MnO₄ + MnO₂ + O₂↑</div>
+      </div>
+
+      <div class="bento-card wide" style="cursor:pointer" onclick="openReaction('c-o2')">
+        <div class="bento-glow" style="background:var(--pink)"></div>
+        <span class="bento-icon">🔥</span>
+        <div class="bento-title">Uglerod yonishi</div>
+        <div class="bento-desc">Ko'mir yonib CO₂ hosil qiladi. Issiqlik elektr stansiyalari, metallurgiya — insoniyat tarixidagi eng ko'p ishlatiladigan reaksiya.</div>
+        <div class="bento-formula">C + O₂ → CO₂  |  ΔH = –393.5 kJ/mol</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BIOLOGY SECTION -->
+<section id="biology">
+  <div class="container">
+    <div class="section-eyebrow">Biologik Jarayonlar</div>
+    <div class="section-title">Hayot — bu <strong>kimyo</strong></div>
+    <p style="font-size:15px;color:var(--text2);max-width:500px;margin-bottom:8px;line-height:1.7">Shifokor sifatida bu jarayonlarni bilish — tananing tilini tushunish demak.</p>
+    <div class="bio-cards">
+
+      <div class="bio-card" onclick="openBio('atp')">
+        <span class="bio-emoji">⚡</span>
+        <div class="bio-title">ATP Sintezi</div>
+        <div class="bio-desc">Hujayra "valyutasi" — adenozin trifosfat. Mitoxondriyada glukoza parchalanib ATP hosil bo'ladi. Har bir yurak urishi, har bir fikr — ATP energiyasi.</div>
+        <div class="bio-fact"><strong>Qiziq fakt:</strong> Inson tanasi kuniga o'z vazniga teng miqdorda ATP ishlatadi — va qayta sintez qiladi!</div>
+      </div>
+
+      <div class="bio-card" onclick="openBio('dnk')">
+        <span class="bio-emoji">🧬</span>
+        <div class="bio-title">DNK Replikatsiyasi</div>
+        <div class="bio-desc">Hujayra bo'linishida DNK o'zini nusxalaydi. Ikki zanjirli spiral ajralib, har biriga yangi zanjir sintez qilinadi. Aniqlik: 3 milliardta nukleotiddan faqat 1 xato.</div>
+        <div class="bio-fact"><strong>Formula:</strong> DNK polimeraz + dNTP → yangi DNK zanjiri + PPᵢ</div>
+      </div>
+
+      <div class="bio-card" onclick="openBio('fotosintez')">
+        <span class="bio-emoji">🌿</span>
+        <div class="bio-title">Fotosintez</div>
+        <div class="bio-desc">O'simliklar quyosh nuri, CO₂ va suvdan glukoza va kislorod yaratadi. Yer yuzidagi barcha hayotning energiya manbai — tirik tabiatning eng buyuk kimyoviy mo'jizasi.</div>
+        <div class="bio-fact"><strong>Reaksiya:</strong> 6CO₂ + 6H₂O + yorug'lik → C₆H₁₂O₆ + 6O₂</div>
+      </div>
+
+      <div class="bio-card" onclick="openBio('gemoglobin')">
+        <span class="bio-emoji">🩸</span>
+        <div class="bio-title">Gemoglobin & Kislorod</div>
+        <div class="bio-desc">Qonda gemoglobin O₂ ni bog'lab to'qimalarga yetkazadi. Temir atomi O₂ bilan birikadi — shuning uchun qon qizil rangli. CO zaharlanganda CO gemoglobinni "egallaydi".</div>
+        <div class="bio-fact"><strong>Reaksiya:</strong> Hb + O₂ ⇌ HbO₂ (oksigемoglobin)</div>
+      </div>
+
+      <div class="bio-card" onclick="openBio('ferment')">
+        <span class="bio-emoji">🔬</span>
+        <div class="bio-title">Ferment Katalizi</div>
+        <div class="bio-desc">Biologik katalizatorlar — fermentlar milliardlab reaksiyalarni har soniyada boshqaradi. Substrat fermenting faol markaziga bog'lanib mahsulotga aylanadi.</div>
+        <div class="bio-fact"><strong>Misol:</strong> Amilaza (og'iz) — kraxmalni glukozaga parchalaydi. Shu sababdan non chaynaganda shirin ta'm seziladi.</div>
+      </div>
+
+      <div class="bio-card" onclick="openBio('ph')">
+        <span class="bio-emoji">🧪</span>
+        <div class="bio-title">Qon pH Muvozanati</div>
+        <div class="bio-desc">Qon pH i doim 7.35–7.45 oralig'ida. Bu kimyoviy muvozanat hayot uchun hal qiluvchi. Biroz o'zgarsa — acidoz yoki alkaloz rivojlanadi, organlar ishlamay qoladi.</div>
+        <div class="bio-fact"><strong>Bufer:</strong> H₂CO₃ ⇌ H⁺ + HCO₃⁻ — karbonat bufer tizimi</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PREMIUM -->
+<section class="premium-section" id="premium">
+  <div class="container">
+    <div class="premium-box">
+      <span class="premium-crown">✦</span>
+      <div class="premium-title">ChemLab <strong>Pro</strong></div>
+      <p class="premium-sub">Tibbiy kimyo, organik reaksiyalar, farmakologiya va 500+ premium content — barchasi bir joyda.</p>
+
+      <div class="plans-grid">
+        <div class="plan-card">
+          <div class="plan-name">Bepul</div>
+          <div class="plan-price">0 <span>so'm</span></div>
+          <div class="plan-period">Har doim bepul</div>
+          <ul class="plan-features">
+            <li>20 ta kimyoviy reaksiya</li>
+            <li>6 ta biologik jarayon</li>
+            <li>Asosiy qidiruv</li>
+            <li class="locked">Tibbiy kimyo bo'limi</li>
+            <li class="locked">Organik kimyo</li>
+            <li class="locked">Testlar va viktorina</li>
+            <li class="locked">PDF yuklab olish</li>
+          </ul>
+          <button class="plan-btn">Hozirda siz bunda</button>
+        </div>
+
+        <div class="plan-card featured">
+          <div class="plan-name">Pro — Talaba</div>
+          <div class="plan-price">29 000 <span>so'm</span></div>
+          <div class="plan-period">oyiga · 1 ta o'quvchi</div>
+          <ul class="plan-features">
+            <li>500+ kimyoviy reaksiya</li>
+            <li>Biologik jarayonlar to'liq</li>
+            <li>Tibbiy kimyo (farmakologiya)</li>
+            <li>Organik kimyo mexanizmlari</li>
+            <li>Interaktiv testlar</li>
+            <li>PDF yuklab olish</li>
+            <li>Yangi content har hafta</li>
+          </ul>
+          <button class="plan-btn featured-btn" onclick="showPayment('Pro Talaba', '29 000')">Boshlash →</button>
+        </div>
+
+        <div class="plan-card">
+          <div class="plan-name">Guruh</div>
+          <div class="plan-price">89 000 <span>so'm</span></div>
+          <div class="plan-period">oyiga · 5 ta o'quvchi</div>
+          <ul class="plan-features">
+            <li>Pro rejaning hammasi</li>
+            <li>5 ta hisob bitta narxda</li>
+            <li>O'qituvchi paneli</li>
+            <li>Progress kuzatuv</li>
+            <li>Maxsus qo'llab-quvvatlash</li>
+            <li>Erta yangilanishlar</li>
+            <li>Maxsus so'rov bo'yicha content</li>
+          </ul>
+          <button class="plan-btn" onclick="showPayment('Guruh', '89 000')">Guruh boshlash →</button>
+        </div>
+      </div>
+
+      <p style="font-size:12px;color:var(--text3)">✓ 7 kunlik bepul sinov · ✓ Istalgan vaqt bekor qilish · ✓ Click, Payme orqali to'lov</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  ⬡ ChemLab Pro — Kimyo & Biologiya platformasi · 2025 · O'zbekiston uchun yaratilgan
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div id="modalInner"></div>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="payModal" onclick="closePayModal(event)">
+  <div class="modal" id="payBox" style="max-width:420px;text-align:center">
+    <button class="modal-close" onclick="document.getElementById('payModal').classList.remove('open')">✕</button>
+    <div style="font-size:40px;margin-bottom:16px">✦</div>
+    <div style="font-size:22px;font-weight:400;letter-spacing:-0.02em;margin-bottom:8px" id="payTitle"></div>
+    <div style="font-size:14px;color:var(--text2);margin-bottom:28px">Rejalashtirilgan narx — to'lov tizimi integratsiyasi davom etmoqda</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button onclick="closePayModalDirect()" style="padding:14px;background:linear-gradient(135deg,var(--gold),#ef4444);border:none;color:#000;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;border-radius:12px;cursor:pointer;">Click orqali to'lash</button>
+      <button onclick="closePayModalDirect()" style="padding:14px;background:var(--glass2);border:1px solid var(--border2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;border-radius:12px;cursor:pointer;">Payme orqali to'lash</button>
+    </div>
+    <p style="margin-top:16px;font-size:12px;color:var(--text3)">7 kunlik bepul sinov · Bekor qilish — 1 klik</p>
+  </div>
+</div>
+
+<script>
+// ── Element colors ──────────────────────────────────────────────────────
+const EC={
+  Na:  {bg:'rgba(74,222,128,.15)',b:'rgba(74,222,128,.4)', t:'#4ade80'},
+  K:   {bg:'rgba(167,139,250,.15)',b:'rgba(167,139,250,.4)',t:'#a78bfa'},
+  H:   {bg:'rgba(56,189,248,.15)', b:'rgba(56,189,248,.4)', t:'#38bdf8'},
+  H2:  {bg:'rgba(56,189,248,.15)', b:'rgba(56,189,248,.4)', t:'#38bdf8'},
+  H2O: {bg:'rgba(34,211,238,.15)', b:'rgba(34,211,238,.4)', t:'#22d3ee'},
+  OH:  {bg:'rgba(34,211,238,.12)', b:'rgba(34,211,238,.3)', t:'#22d3ee'},
+  O:   {bg:'rgba(244,114,182,.15)',b:'rgba(244,114,182,.4)',t:'#f472b6'},
+  O2:  {bg:'rgba(244,114,182,.15)',b:'rgba(244,114,182,.4)',t:'#f472b6'},
+  Cl:  {bg:'rgba(250,204,21,.15)', b:'rgba(250,204,21,.4)', t:'#facc15'},
+  Cl2: {bg:'rgba(250,204,21,.15)', b:'rgba(250,204,21,.4)', t:'#facc15'},
+  HCl: {bg:'rgba(232,121,249,.15)',b:'rgba(232,121,249,.4)',t:'#e879f9'},
+  Ca:  {bg:'rgba(251,146,60,.15)', b:'rgba(251,146,60,.4)', t:'#fb923c'},
+  Fe:  {bg:'rgba(248,113,113,.15)',b:'rgba(248,113,113,.4)',t:'#f87171'},
+  NaOH:{bg:'rgba(74,222,128,.1)',  b:'rgba(74,222,128,.3)', t:'#86efac'},
+  NaCl:{bg:'rgba(74,222,128,.1)',  b:'rgba(74,222,128,.3)', t:'#86efac'},
+  C:   {bg:'rgba(148,163,184,.15)',b:'rgba(148,163,184,.4)',t:'#94a3b8'},
+  CO2: {bg:'rgba(148,163,184,.12)',b:'rgba(148,163,184,.3)',t:'#94a3b8'},
+  KMnO4:{bg:'rgba(167,139,250,.15)',b:'rgba(167,139,250,.4)',t:'#a78bfa'},
+  MnO2:{bg:'rgba(167,139,250,.1)',b:'rgba(167,139,250,.3)',t:'#c4b5fd'},
+  K2MnO4:{bg:'rgba(167,139,250,.1)',b:'rgba(167,139,250,.3)',t:'#c4b5fd'},
+  CaO: {bg:'rgba(251,146,60,.12)', b:'rgba(251,146,60,.35)',t:'#fb923c'},
+  FeCl2:{bg:'rgba(248,113,113,.12)',b:'rgba(248,113,113,.3)',t:'#f87171'},
+};
+function gc(tok){
+  const f=tok.replace(/^\d+/,'');
+  if(EC[f]) return EC[f];
+  for(const k of Object.keys(EC)) if(f.startsWith(k)) return EC[k];
+  return {bg:'rgba(148,163,184,.1)',b:'rgba(148,163,184,.25)',t:'#94a3b8'};
+}
+function rTok(tok){
+  const coeff=tok.match(/^(\d+)/)?.[1]||'';
+  const form=tok.replace(/^(\d+)/,'');
+  const c=gc(form);
+  const disp=form.replace(/(\d+)/g,'<sub>$1</sub>');
+  return `<span class="tok" style="background:${c.bg};border:1px solid ${c.b};color:${c.t}">${coeff?`<span style="opacity:.55;font-size:11px;margin-right:2px">${coeff}</span>`:''}${disp}</span>`;
+}
+function rEq(raw){
+  const parts=raw.split(/([+→=])/);
+  let h='';
+  for(let p of parts){
+    p=p.trim();
+    if(!p) continue;
+    if(p==='+') h+=`<span class="op">+</span>`;
+    else if(p==='='||p==='→') h+=`<span class="arrow-op">→</span>`;
+    else h+=rTok(p);
+  }
+  return h;
+}
+
+// ── Reaction DB ─────────────────────────────────────────────────────────
+const RDB=[
+  {id:'na-h2o',keys:['na+h2o'],raw:'2Na+2H2O=2NaOH+H2',type:'redox',name:'Natriy + Suv',
+   d:{desc:'Natriy metall suv bilan shiddatli reaksiyaga kirishadi. Suv yuzasida tez aylanib yonadi, ba\'zan alov paydo bo\'ladi. Bu redoks reaksiyasi — natriy oksidlanadi, vodorod qaytariladi.',
+      cond:'Xona temperaturasi. Maxsus sharoit kerak emas.',
+      type:'Oksidlanish-qaytarilish (redoks)',energy:'Ekzotermik',
+      prod:'NaOH (kuchli ishqor) + H₂↑ (portlovchi gaz)',
+      app:'NaOH sanoatda: sovun, qog\'oz, kimyo ishlab chiqarish. Har yili millionlab tonna ishlatiladi.',
+      warn:'⚠ Portlash va yonish xavfi! Natriy suv bilan aslo katta miqdorda aralashtirilmasin.'}},
+  {id:'h2-o2',keys:['h2+o2'],raw:'2H2+O2=2H2O',type:'synthesis',name:'Vodorod yonishi — Suv',
+   d:{desc:'Vodorodning kislorod bilan yonishi — eng kuchli va ekzotermik reaksiyalardan biri. Natijada faqat suv hosil bo\'ladi va atrof-muhitga zarar yo\'q.',
+      cond:'T > 550°C yoki uchqun. Aralashma \'detonatsion gaz\' deyiladi.',
+      type:'Sintez, Yonish',energy:'ΔH = –572 kJ/mol (juda kuchli)',
+      prod:'H₂O (suv — gaz, keyin suyuqlik)',
+      app:'NASA raketa yoqilg\'isi, yoqilg\'i elementlari, ekologik toza energetika — kelajak yoqilg\'isi.',
+      warn:'⚠ H₂-O₂ aralashmasi portlovchi. Yopiq joyda hech qachon yig\'manqo\'ring.'}},
+  {id:'naoh-hcl',keys:['naoh+hcl'],raw:'NaOH+HCl=NaCl+H2O',type:'acidbase',name:'Neytrallanish',
+   d:{desc:'Kislota-ishqor reaksiyasining klassik namunasi. Kuchli ishqor va kuchli kislota bir-birini to\'liq neytrallaydi. Mahsulot — osh tuzi va suv. pH 7 ga yaqinlashadi.',
+      cond:'Xona temperaturasi, suvli eritma.',
+      type:'Neytrallanish (kislota-asos)',energy:'Ekzotermik, ΔH ≈ –57.3 kJ/mol',
+      prod:'NaCl (osh tuzi) + H₂O',
+      app:'pH tartibga solish, sanoat neytralizatsiyasi, tibbiyotda kislota-ishqor muvozanati.',
+      warn:'NaOH va HCl kuchli korroziv. Ko\'z va teriga tegmasin.'}},
+  {id:'ca-o2',keys:['ca+o2'],raw:'2Ca+O2=2CaO',type:'synthesis',name:'Kalsiy oksidlanishi',
+   d:{desc:'Kalsiy metall kislorodda yonib kalsiy oksid hosil qiladi. Kalsiy — eng faol ishqoriy-yer metallaridan biri.',
+      cond:'Qizdirish yoki alanga bilan boshlash.',
+      type:'Sintez, Yonish',energy:'Ekzotermik',
+      prod:'CaO (kalsiy oksid, so\'ndirilmagan ohak)',
+      app:'Qurilish: ohak ishlab chiqarish. Metallurgiya, suvni yumshatish, tuproq pH ni oshirish.',
+      warn:'CaO suv bilan reaksiyada kuchli issiqlik ajratadi — ehtiyot bo\'ling.'}},
+  {id:'fe-hcl',keys:['fe+hcl'],raw:'Fe+2HCl=FeCl2+H2',type:'redox',name:'Temir + Xlorid Kislota',
+   d:{desc:'Temir suyultirilgan xlorid kislota bilan reaksiyaga kirishib, temir(II) xlorid va vodorod gazi hosil qiladi. Fe⁰ → Fe²⁺ oksidlanadi.',
+      cond:'Xona temperaturasi, suyultirilgan HCl.',
+      type:'Oksidlanish-qaytarilish',energy:'Ekzotermik',
+      prod:'FeCl₂ (yashil) + H₂↑',
+      app:'Temir(II) tuzlari olish, metallurgiya, pas ketkazish.',
+      warn:'HCl bug\'lari zaharli. Yaxshi ventilyatsiyada ishlang.'}},
+  {id:'kmno4',keys:['kmno4'],raw:'2KMnO4=K2MnO4+MnO2+O2',type:'decomp',name:'KMnO₄ Parchalanishi',
+   d:{desc:'Kaliy permanganat — to\'q binafsha rangli, kuchli oksidlovchi. Qizdirilganda parchalanib kislorod ajratadi. Laboratoriyada kislorod olishning qulay usuli.',
+      cond:'T > 200°C. Katalizator shart emas.',
+      type:'Parchalanish',energy:'Endotermik',
+      prod:'K₂MnO₄ + MnO₂ (qo\'ng\'ir) + O₂↑',
+      app:'Kislorod olish, antiseptik (tibbiyotda yaraga), suv tozalash.',
+      warn:'KMnO₄ kuchli oksidlovchi. Organik moddalar bilan aralashmasin — yonish xavfi.'}},
+  {id:'c-o2',keys:['c+o2'],raw:'C+O2=CO2',type:'combustion',name:'Uglerod Yonishi',
+   d:{desc:'Ko\'mirning kislorod bilan to\'liq yonishi. Insoniyat tarixida eng ko\'p ishlatiladigan reaksiya — issiqlik va energiya olish.',
+      cond:'Alanga yoki yuqori temperatura.',
+      type:'Yonish, Sintez',energy:'ΔH = –393.5 kJ/mol',
+      prod:'CO₂ (karbonat angidrid)',
+      app:'Issiqlik stansiyalari, metallurgiya, pishirish, transport.',
+      warn:'CO₂ yopiq joyda to\'planib, kislorod kamayadi. Uglerod to\'liq yonmasa CO (o\'ta zaharli gaz) hosil bo\'ladi.'}},
+];
+
+// ── Bio DB ──────────────────────────────────────────────────────────────
+const BDB={
+  atp:{emoji:'⚡',title:'ATP Sintezi',
+    desc:'Adenozin trifosfat (ATP) — hujayra energiyasining asosiy "valyutasi". Mitoxondriyada glikoliz va Krebs sikli orqali glukoza parchalanib ATP hosil bo\'ladi.',
+    equation:'C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + 38 ATP',
+    facts:[
+      'Bitta glukoza molekulasidan 38 ta ATP hosil bo\'ladi',
+      'Inson tanasi kuniga ~40 kg ATP sintez qiladi va sarflaydi',
+      'Mushak qisqarishi, sinaptik uzatish, ion nasos — barchasi ATP ishlatadi',
+      'Tibbiyot: ATP yetishmovchiligi mitoxondrial kasalliklarga olib keladi'
+    ]},
+  dnk:{emoji:'🧬',title:'DNK Replikatsiyasi',
+    desc:'Hujayra bo\'linishidan oldin DNK o\'zini to\'liq nusxalaydi. Ikki zanjirli spiral ajralib, har biriga komplementar yangi zanjir sintez qilinadi (semi-konservativ replikatsiya).',
+    equation:'DNK + dNTP (pol-meraz) → 2 × DNK + PPᵢ',
+    facts:[
+      'Odam genomida 3 milliard nukleotid juft bor',
+      'Har bir hujayra bo\'linishida 1 xatodan kam nukleotid noto\'g\'ri qo\'shiladi',
+      'DNK polimeraz tezligi: ~1000 nukleotid/soniya',
+      'Tibbiyot: DNK replikatsiya xatolari — onkologik kasalliklarning asosi'
+    ]},
+  fotosintez:{emoji:'🌿',title:'Fotosintez',
+    desc:'O\'simliklar xloroplastlarda quyosh nurini tutib, CO₂ va suvdan organik modda (glukoza) va O₂ sintez qiladi. Yer atmosferasidagi barcha kislorod fotosintez mahsuli.',
+    equation:'6CO₂ + 6H₂O + hν → C₆H₁₂O₆ + 6O₂',
+    facts:[
+      'Yer yuzidagi barcha O₂ fotosintez orqali hosil bo\'lgan',
+      'Yiliga ~100 milliard tonna organik modda sintez qilinadi',
+      'Xlorofill to\'lqin uzunligi: 430 nm (ko\'k) va 680 nm (qizil)',
+      'Tibbiyot: O₂ terapiya, barcha ozuqa moddalar oxir-oqibat fotosintezdan'
+    ]},
+  gemoglobin:{emoji:'🩸',title:'Gemoglobin & Kislorod',
+    desc:'Eritrositlardagi gemoglobin O₂ ni o\'pkada bog\'lab, to\'qimalarga yetkazib, CO₂ ni qaytarib olib keladi. Temir atomi O₂ bilan birikadi — oksigемoglobin qizil, deoksigемoglobin qoramtir.',
+    equation:'Hb + 4O₂ ⇌ Hb(O₂)₄ (oksigемoglobin)',
+    facts:[
+      'Bitta gemoglobin 4 ta O₂ molekulasini bog\'laydi',
+      'CO zaharlanganda: COHb dissotsiatsiya konstanta O₂ HbO dan 240 marta past',
+      'Anemiya: Hb kamaysa O₂ yetkazilishi buziladi',
+      'Tibbiyot: SpO₂ — pulsoksimetr shu prinsipda ishlaydi'
+    ]},
+  ferment:{emoji:'🔬',title:'Ferment Katalizi',
+    desc:'Fermentlar (enzimlar) — biologik katalizatorlar. Substrat faol markazga bog\'lanib, aktivlanish energiyasi pasayadi va reaksiya milliard marta tezlashadi. Issiqliqqa sezgir.',
+    equation:'E + S ⇌ ES → E + P  (Michaelis-Menten)',
+    facts:[
+      'Odam organizmida 75 000 dan ortiq ferment turi bor',
+      'Amilaza: kraxmalni parchalaydi (og\'iz va me\'da osti bezi)',
+      'Ferment ishlamasa — metabolik kasalliklar (laktaza yetishmovchiligi, PKU)',
+      'Tibbiyot: ko\'plab dorilar ferment inhibitoridir (ibuprofen COX inhibitori)'
+    ]},
+  ph:{emoji:'🧪',title:'Qon pH Muvozanati',
+    desc:'Qon pH i 7.35–7.45 oralig\'ida bo\'lishi hayot uchun zarur. Karbonat bufer tizimi, o\'pka (CO₂) va buyrak (HCO₃⁻) muvozanatni ta\'minlaydi.',
+    equation:'H₂CO₃ ⇌ H⁺ + HCO₃⁻  ⇌  CO₂ + H₂O',
+    facts:[
+      'pH < 7.35 → Acidoz (nafas yetishmovchiligi, diabet ketoacidozi)',
+      'pH > 7.45 → Alkaloz (o\'ta tez nafas olish, qusish)',
+      'pH 6.8 dan past yoki 7.8 dan baland — o\'lim xavfi',
+      'Tibbiyot: Qon gazi tahlili (ABG) — reanimatologiyaning asosi'
+    ]},
+};
+
+function norm(s){return s.toLowerCase().replace(/\s+/g,'').replace(/=/,'')}
+function findR(q){
+  const n=norm(q);
+  return RDB.filter(r=>r.keys.some(k=>norm(k)===n||n.includes(norm(k))||norm(k).includes(n)));
+}
+function bdg(type){
+  const m={redox:'badge-redox Redoks',synthesis:'badge-synthesis Sintez',acidbase:'badge-acidbase Kislota-Asos',combustion:'badge-combustion Yonish',decomp:'badge-decomp Parchalanish'};
+  const [cls,lbl]=(m[type]||'badge-redox Noma\'lum').split(' ');
+  return `<span class="badge ${cls}">${lbl}</span>`;
+}
+
+function doSearch(){
+  const q=document.getElementById('searchInput').value.trim();
+  if(!q) return;
+  // Check bio keywords
+  const bioKw=['atp','dnk','fotosintez','gemoglobin','ferment','ph','biologiya','bio'];
+  const isB=bioKw.some(k=>q.toLowerCase().includes(k));
+  if(isB){
+    const bioMap={atp:'atp',dnk:'dnk',fotosintez:'fotosintez',gemoglobin:'gemoglobin',ferment:'ferment',ph:'ph'};
+    for(const[k,id] of Object.entries(bioMap)){
+      if(q.toLowerCase().includes(k)){openBio(id);return}
+    }
+  }
+  const found=findR(q);
+  const sec=document.getElementById('resultsSection');
+  const grid=document.getElementById('resultsGrid');
+  sec.style.display='block';
+  document.getElementById('resultsLabel').textContent=found.length?`${found.length} ta reaksiya topildi`:'Natija topilmadi';
+  if(!found.length){
+    grid.innerHTML=`<div class="empty"><div class="empty-em">⚗</div><div style="font-size:14px;color:var(--text3)">"${q}" uchun reaksiya topilmadi.<br>Namunalardan birini sinab ko'ring.</div></div>`;
+    sec.scrollIntoView({behavior:'smooth',block:'start'});
+    return;
+  }
+  grid.innerHTML='';
+  found.forEach((r,i)=>{
+    const card=document.createElement('div');
+    card.className='reaction-card';
+    card.style.animationDelay=(i*.07)+'s';
+    card.innerHTML=`
+      <div class="card-left">
+        <div class="eq-display">${rEq(r.raw)}</div>
+        <div class="card-meta">${bdg(r.type)}<span class="card-name">${r.name}</span></div>
+      </div>
+      <span class="card-arrow">→</span>`;
+    card.onclick=()=>openReaction(r.id);
+    grid.appendChild(card);
+  });
+  sec.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function openReaction(id){
+  const r=RDB.find(x=>x.id===id);
+  if(!r) return;
+  const d=r.d;
+  document.getElementById('modalInner').innerHTML=`
+    <div class="modal-tag">Kimyoviy Reaksiya</div>
+    <h2>${r.name}</h2>
+    <div class="modal-eq">${rEq(r.raw)}</div>
+    <p class="modal-desc">${d.desc}</p>
+    <div class="info-grid">
+      <div class="info-cell"><div class="info-label">Reaksiya turi</div><div class="info-val">${d.type}</div></div>
+      <div class="info-cell"><div class="info-label">Energiya</div><div class="info-val">${d.energy}</div></div>
+      <div class="info-cell"><div class="info-label">Sharoitlar</div><div class="info-val">${d.cond}</div></div>
+      <div class="info-cell"><div class="info-label">Mahsulotlar</div><div class="info-val">${d.prod}</div></div>
+    </div>
+    <div class="modal-application">🔬 <strong>Qo'llanilishi:</strong> ${d.app}</div>
+    ${d.warn?`<div class="modal-warning">${d.warn}</div>`:''}`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function openBio(id){
+  const b=BDB[id];
+  if(!b) return;
+  const factsHtml=b.facts.map(f=>`<li style="display:flex;gap:8px;margin-bottom:8px;font-size:13px;color:var(--text2);line-height:1.5"><span style="color:var(--accent2);flex-shrink:0">◆</span>${f}</li>`).join('');
+  document.getElementById('modalInner').innerHTML=`
+    <div class="modal-tag">Biologik Jarayon</div>
+    <h2 style="display:flex;align-items:center;gap:10px">${b.emoji} ${b.title}</h2>
+    <div style="padding:16px 18px;background:rgba(129,140,248,.06);border:1px solid rgba(129,140,248,.15);border-radius:12px;font-family:'DM Mono',monospace;font-size:14px;color:#a5b4fc;margin-bottom:20px;line-height:1.6">${b.equation}</div>
+    <p class="modal-desc">${b.desc}</p>
+    <div style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:12px">Muhim faktlar</div>
+    <ul style="list-style:none">${factsHtml}</ul>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e){if(e.target===document.getElementById('modalOverlay'))closeModalDirect()}
+function closeModalDirect(){document.getElementById('modalOverlay').classList.remove('open')}
+function setSearch(v){document.getElementById('searchInput').value=v;doSearch()}
+function scrollToPremium(){document.getElementById('premium').scrollIntoView({behavior:'smooth'})}
+function showPayment(plan,price){
+  document.getElementById('payTitle').textContent=`${plan} — ${price} so'm/oy`;
+  document.getElementById('payModal').classList.add('open');
+}
+function closePayModal(e){if(e.target===document.getElementById('payModal'))closePayModalDirect()}
+function closePayModalDirect(){document.getElementById('payModal').classList.remove('open')}
+document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModalDirect();closePayModalDirect()}});
+</script>
+</body>
+</html>
